@@ -1,0 +1,110 @@
+#!/bin/bash
+commend=$1
+version=$2
+if [ -z "$3" ];then
+    tpl="fp00"
+else
+    tpl=$3
+fi
+forever=/home/www/bin/forever
+jockjsPath=/home/www/release/node
+jockjsLogPath=/data1/logs/node
+jockjsConfPath=/home/www/config/node
+
+function forever_start_def(){
+  forever_stop_def
+  $forever start -a -l $jockjsLogPath/js.log $jockjsPath/jockjs/service.js $jockjsConfPath/def.js
+  $forever start -a -l $jockjsLogPath/css.log $jockjsPath/jockcss/service.js $jockjsConfPath/def.css
+}
+
+function forever_restart_def(){
+  forever_start_def
+}
+
+function forever_stop_def(){
+  $forever stop $jockjsPath/jockjs/service.js
+  $forever stop $jockjsPath/jockcss/service.js
+}
+
+function forever_start(){
+  forever_stop "$1"
+  $forever start -a -l $jockjsLogPath/js.log $jockjsPath/$1/jockjs/service.js $jockjsConfPath/$1.js
+  $forever start -a -l $jockjsLogPath/css.log $jockjsPath/$1/jockcss/service.js $jockjsConfPath/$1.css
+}
+
+function forever_restart(){
+  forever_start "$1"
+}
+
+function forever_stop(){
+  $forever stop $jockjsPath/$1/jockjs/service.js
+  $forever stop $jockjsPath/$1/jockcss/service.js
+}
+
+function forever_list(){
+  $forever list
+}
+
+function git_pull(){
+  cd $jockjsPath/$1
+  ls | while read path; do 
+    cd $jockjsPath/$1/$path;
+    echo "current path : $jockjsPath/$1/$path";
+    git branch 
+    git pull --rebase; 
+  done;  
+}
+
+function git_co_master(){
+  cd $jockjsPath/$1
+  ls | while read path; do 
+    cd $jockjsPath/$1/$path;
+    echo "current path : $jockjsPath/$1/$path";
+    git co master
+    git pull --rebase; 
+  done;  
+}
+
+
+
+if [[ "$commend" = "create" && ! -z "$version" ]];then
+    v=${version:2:2}
+    cd $jockjsPath
+    rm -rf "$version"
+    cp -r "$tpl" "$version"
+    #git_co_master "$version"
+    cd $jockjsConfPath
+    cp "$tpl".js "$version".js
+    cp "$tpl".css "$version".css
+    sed -i s#$tpl#$version#g "$version".js
+    sed -i s#$tpl#$version#g "$version".css
+    sed -i s#52100#521$v#g "$version".js
+    sed -i s#52200#522$v#g "$version".css
+    echo ""
+    echo "$version created. "
+    exit 0
+fi
+
+
+if [ "$commend" = "restart" -o "$commend" = "start" -o "$commend" = "stop" -o "$commend" = "list" -o "$commend" = "pull" ];then
+    if [ "$commend" = "list" ];then
+        forever_$commend
+        exit
+    fi 
+   
+    if [ "$commend" = "pull" ];then
+        if [ ! -z "$version" ];then
+            git_pull "$version"
+        else
+            echo "use jockjs pull fpxx"
+       fi
+    else
+        if [ -z "$version" ];then
+            forever_"$commend"_def
+        else
+            forever_$commend "$version"
+        fi
+    fi
+else
+    echo "use jockjs restart|stop|start|list|pull"
+fi
