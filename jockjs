@@ -6,39 +6,45 @@ if [ -z "$3" ];then
 else
     tpl=$3
 fi
-forever=/home/www/bin/forever
+forever=/usr/local/bin/forever
 jockjsPath=/home/www/release/node
 jockjsLogPath=/data1/logs/node
 jockjsConfPath=/home/www/config/node
 
-function forever_start_def(){
-  forever_stop_def
-  $forever start -a -l $jockjsLogPath/js.log $jockjsPath/jockjs/service.js $jockjsConfPath/def.js
-  $forever start -a -l $jockjsLogPath/css.log $jockjsPath/jockcss/service.js $jockjsConfPath/def.css
-}
+if [ ! -f "$forever" ];then
+  forever=/home/www/bin/forever
+else
+  forever=forever
+fi
 
-function forever_restart_def(){
-  forever_start_def
-}
-
-function forever_stop_def(){
-  $forever stop $jockjsPath/jockjs/service.js
-  $forever stop $jockjsPath/jockcss/service.js
+function forever_action(){
+  if [ "$1" = "start" -o "$1" = "restart" -o "$1" = "reload" ];then
+    forever_stop $2
+    forever_start $2
+  fi
+  if [ "$1" = "stop" ];then
+    forever_stop $2
+  fi
 }
 
 function forever_start(){
-  forever_stop "$1"
-  $forever start -a -l $jockjsLogPath/js.log $jockjsPath/$1/jockjs/service.js $jockjsConfPath/$1.js
-  $forever start -a -l $jockjsLogPath/css.log $jockjsPath/$1/jockcss/service.js $jockjsConfPath/$1.css
-}
-
-function forever_restart(){
-  forever_start "$1"
+  if [ -z "$1" ];then
+    fpPath=fp00
+  else
+    fpPath=$1
+  fi
+  $forever start -a -l $jockjsLogPath/js.log $jockjsPath/$fpPath/jockjs/service.js $jockjsConfPath/$fpPath.js
+  $forever start -a -l $jockjsLogPath/css.log $jockjsPath/$fpPath/jockcss/service.js $jockjsConfPath/$fpPath.css
 }
 
 function forever_stop(){
-  $forever stop $jockjsPath/$1/jockjs/service.js
-  $forever stop $jockjsPath/$1/jockcss/service.js
+  if [ -z "$1" ];then
+    fpPath=fp00
+  else
+    fpPath=$1
+  fi
+  $forever stop $jockjsPath/$fpPath/jockjs/service.js
+  $forever stop $jockjsPath/$fpPath/jockcss/service.js
 }
 
 function forever_list(){
@@ -68,8 +74,8 @@ function git_co_master(){
 
 if [[ "$commend" = "domain" && ! -z "$version" ]];then
     cd $jockjsConfPath
-    sed -i s#jockjs.fp00.dev.aifcdn.com#$version#g fp00.js
-    sed -i s#jockjs.fp00.dev.aifcdn.com#$version#g fp00.css
+    sed -i "" s#jockjs.fp00.dev.aifcdn.com#$version#g fp00.js
+    sed -i "" s#jockjs.fp00.dev.aifcdn.com#$version#g fp00.css
     echo ""
     echo "jockjs domain change to : $version "
     exit 0
@@ -95,7 +101,7 @@ if [[ "$commend" = "create" && ! -z "$version" ]];then
 fi
 
 
-if [ "$commend" = "restart" -o "$commend" = "start" -o "$commend" = "stop" -o "$commend" = "list" -o "$commend" = "pull" ];then
+if [ "$commend" = "reload" -o "$commend" = "restart" -o "$commend" = "start" -o "$commend" = "stop" -o "$commend" = "list" -o "$commend" = "pull" ];then
     if [ "$commend" = "list" ];then
         forever_$commend
         exit
@@ -108,12 +114,8 @@ if [ "$commend" = "restart" -o "$commend" = "start" -o "$commend" = "stop" -o "$
             echo "use jockjs pull fpxx"
        fi
     else
-        if [ -z "$version" ];then
-            forever_"$commend"_def
-        else
-            forever_$commend "$version"
-        fi
+        forever_action "$commend" "$version"
     fi
 else
-    echo "use jockjs restart|stop|start|list|pull"
+    echo "use jockjs restart|reload|stop|start|list|pull"
 fi

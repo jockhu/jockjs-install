@@ -68,25 +68,25 @@ exports.componentModules = ['utils','ui','logger'];
  * Default javascript host
  * @const
  */
-exports.jsHost = 'http://jockjs.fp00.dev.aifcdn.com/';
+exports.jsHost = 'http://jockjs.jockhu.dev.anjuke.com/';
 
 /**
  * Default javascript path
  * @const
  */
-exports.jsPath = 'js';
+exports.jsPath = 'tjs';
 
 /**
  * Default style hosts
  * @const
  */
-exports.cssHost = 'http://jockjs.fp00.dev.aifcdn.com/';
+exports.cssHost = 'http://jockjs.jockhu.dev.anjuke.com/';
 
 /**
  * Default style path
  * @const
  */
-exports.cssPath = 'css';
+exports.cssPath = 'tcss';
 
 /**
  * Default except -> uglify object property
