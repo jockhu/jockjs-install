@@ -66,6 +66,15 @@ function git_co_master(){
 }
 
 
+if [[ "$commend" = "domain" && ! -z "$version" ]];then
+    cd $jockjsConfPath
+    sed -i s#jockjs.fp00.dev.aifcdn.com#$version#g fp00.js
+    sed -i s#jockjs.fp00.dev.aifcdn.com#$version#g fp00.css
+    echo ""
+    echo "jockjs domain change to : $version "
+    exit 0
+fi
+
 
 if [[ "$commend" = "create" && ! -z "$version" ]];then
     v=${version:2:2}
