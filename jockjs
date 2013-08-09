@@ -1,5 +1,5 @@
 #!/bin/bash
-commend=$1
+commond=$1
 version=$2
 if [ -z "$3" ];then
     tpl="fp00"
@@ -71,8 +71,35 @@ function git_co_master(){
   done;  
 }
 
+function git_install(){
+  if [ -z "$1" ];then
+    jockjsPath=/home/www/release/node/$2
+  fi
 
-if [[ "$commend" = "domain" && ! -z "$version" ]];then
+  if [ ! -f $jockjsPath ];then
+    mkdir -p $jockjsPath
+  fi
+  cd $jockjsPath
+  git clone git@git.corp.anjuke.com:aifang/jockjs
+  git clone git@git.corp.anjuke.com:aifang/jockcss
+  git clone git@git.corp.anjuke.com:site/jockjs-touch
+  git clone git@git.corp.anjuke.com:site/jockjs-components  
+ 
+}
+
+function node_install(){
+   
+}
+
+
+if [[ "$commond" = "install" && ! -z "$version" ]];then
+   git_install "$commond" "$version"
+   exit 0
+fi
+
+
+
+if [[ "$commond" = "domain" && ! -z "$version" ]];then
     cd $jockjsConfPath
     sed -i "" s#jockjs.fp00.dev.aifcdn.com#$version#g fp00.js
     sed -i "" s#jockjs.fp00.dev.aifcdn.com#$version#g fp00.css
@@ -82,7 +109,7 @@ if [[ "$commend" = "domain" && ! -z "$version" ]];then
 fi
 
 
-if [[ "$commend" = "create" && ! -z "$version" ]];then
+if [[ "$commond" = "create" && ! -z "$version" ]];then
     v=${version:2:2}
     cd $jockjsPath
     rm -rf "$version"
@@ -101,20 +128,20 @@ if [[ "$commend" = "create" && ! -z "$version" ]];then
 fi
 
 
-if [ "$commend" = "reload" -o "$commend" = "restart" -o "$commend" = "start" -o "$commend" = "stop" -o "$commend" = "list" -o "$commend" = "pull" ];then
-    if [ "$commend" = "list" ];then
-        forever_$commend
+if [ "$commond" = "reload" -o "$commond" = "restart" -o "$commond" = "start" -o "$commond" = "stop" -o "$commond" = "list" -o "$commond" = "pull" ];then
+    if [ "$commond" = "list" ];then
+        forever_$commond
         exit
     fi 
    
-    if [ "$commend" = "pull" ];then
+    if [ "$commond" = "pull" ];then
         if [ ! -z "$version" ];then
             git_pull "$version"
         else
             echo "use jockjs pull fpxx"
        fi
     else
-        forever_action "$commend" "$version"
+        forever_action "$commond" "$version"
     fi
 else
     echo "use jockjs restart|reload|stop|start|list|pull"
