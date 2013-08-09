@@ -73,12 +73,17 @@ function git_co_master(){
 
 function git_install(){
   if [ -z "$1" ];then
-    jockjsPath=/home/www/release/node/$2
+    jockjsPath=/home/www/release/node/$1
+  else
+    jockjsPath=/home/www/release/node/fp00
   fi
 
   if [ ! -f $jockjsPath ];then
     mkdir -p $jockjsPath
   fi
+  
+  echo "git path: $jockjsPath"
+
   cd $jockjsPath
   git clone git@git.corp.anjuke.com:aifang/jockjs
   git clone git@git.corp.anjuke.com:aifang/jockcss
@@ -87,13 +92,17 @@ function git_install(){
  
 }
 
-function node_install(){
-   
+function config_install(){
+  mkdir -p $jockjsConfPath
+  cp -r ./fp00* $jockjsConfPath 
+echo `pwd` 
 }
 
 
+
 if [[ "$commond" = "install" && ! -z "$version" ]];then
-   git_install "$commond" "$version"
+   git_install "$version"
+#   config_install
    exit 0
 fi
 
