@@ -150,7 +150,7 @@ function nodejs_install(){
     make
     sudo make install
     cd /usr/local/lib/node_modules
-    git clone https://github.com/mishoo/UglifyJS.git
+    sudo git clone https://github.com/mishoo/UglifyJS.git
     sudo npm install forever -g
     mkdir -p ~/.node_libraries
     cd ~/.node_libraries
@@ -207,7 +207,9 @@ if [ "$commond" = "install" ];then
      config_install
      bash_install
      nodejs_install
-     #rm -rf $jockjsPath/jockjs-config
+     rm -rf $jockjsPath/jockjs-config
+     ~/bin/jockjs start $version 
+     echo "Finished. Bye! "
    fi
    exit 0
 fi
