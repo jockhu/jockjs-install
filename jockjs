@@ -40,6 +40,7 @@ else
 fi
 
 function forever_action(){
+echo "$1,$2"
   if [ "$1" = "start" -o "$1" = "restart" -o "$1" = "reload" ];then
     forever_stop $2
     forever_start $2
@@ -250,7 +251,7 @@ if [[ "$commond" = "domain" && ! -z "$version" && ! -z "$three" ]];then
     sed -i s#SERVERNAME#$three#g $version.js 
     sed -i s#SERVERNAME#$three#g $version.css 
     echo ""
-    echo "Server Name change to : $version "
+    echo "Server Name change to : $three"
     exit 0
 fi
 
