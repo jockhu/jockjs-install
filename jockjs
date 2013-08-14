@@ -208,7 +208,7 @@ if [ "$commond" = "install" ];then
      echo "eg: install [touch | user | developers | broker] jockjs.xxx.dev.anjuke.com"
    else
      git_install "$version"
-     config_install
+     config_install "$version"
      bash_install
      nodejs_install
      sudo pkill node
