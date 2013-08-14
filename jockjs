@@ -17,7 +17,7 @@ if [ "$commond" = "-h" ];then
     echo ""
     echo "jockjs list"
     echo ""
-    echo "jockjs pull [touch | user | developers | broker]"
+    echo "jockjs pull [touch | user | developers | broker] co master [jockjs|jockcss|jockjs-components|...]"
     echo ""
     echo ""
     exit;
@@ -76,12 +76,24 @@ function forever_list(){
 
 function git_pull(){
   cd $jockjsPath/$1
-  ls | while read path; do 
+  if [[ ! -z "$4" && -e $jockjsPath/$1/$4 ]];then
+     echo "current path : $jockjsPath/$1/$4";
+     cd $jockjsPath/$1/$4
+     git $2 $3
+     git branch
+     git pull --rebase;
+  else
+    ls | while read path; do 
     cd $jockjsPath/$1/$path;
     echo "current path : $jockjsPath/$1/$path";
+    if [ ! -z "$2" ];then
+        git $2 $3
+    fi
     git branch 
     git pull --rebase; 
-  done;  
+    done;
+  fi
+  exit 0 
 }
 
 function git_co_master(){
@@ -271,29 +283,29 @@ if [[ "$commond" = "create" && ! -z "$version" ]];then
     sed -i s#52200#522$v#g "$version".css
     echo ""
     echo "$version created. "
-    exit 0
+    exit
 fi
 
 
-if [ "$commond" = "reload" -o "$commond" = "restart" -o "$commond" = "start" -o "$commond" = "stop" -o "$commond" = "list" -o "$commond" = "pull" ];then
+if [ "$commond" = "pull" ];then
+    if [ ! -z "$version" ];then
+         git_pull "$version" "$three" "$4" "$5"
+    else
+         echo "use jockjs pull touch"
+    fi
+    exit 0 
+fi
+
+
+if [ "$commond" = "reload" -o "$commond" = "restart" -o "$commond" = "start" -o "$commond" = "stop" -o "$commond" = "list" ];then
     if [ "$commond" = "list" ];then
         forever_$commond
         exit
     fi 
    
-    if [ "$commond" = "pull" ];then
-        if [ ! -z "$version" ];then
-            git_pull "$version"
-        else
-            echo "use jockjs pull touch"
-       fi
-    else
-        if [ -z "$version" ];then
-            echo "use jockjs pull touch"
-	    exit 0
-        fi
-        forever_action "$commond" "$version"
-    fi
+    forever_action "$commond" "$version"
 else
     echo "use jockjs [restart|reload|stop|start|list|pull] [touch|user|developers|broker]"
 fi
+
+
