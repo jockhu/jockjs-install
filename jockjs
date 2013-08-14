@@ -175,6 +175,19 @@ function bash_install(){
   fi
 }
 
+function clean_install(){
+  rm -rf $jockjsConfPath 
+  rm -rf $jockjsPath
+  rm -rf ~/bin/jockjs
+  echo "Jockjs cleand."
+}
+
+if [ "$commond" = "uninstall" ];then
+   clean_install
+   sudo rm -rf /usr/local/{bin/{node,npm},lib/node_modules/npm,lib/node,share/man/*/node.*}
+   echo "Nodejs removed."
+fi
+
 if [ "$commond" = "install" ];then
    if [ -z "$version" ];then
      echo "Missing parameters."
@@ -182,10 +195,7 @@ if [ "$commond" = "install" ];then
    fi
 
    if [ "$version" = "clean" ];then
-      rm -rf $jockjsConfPath 
-      rm -rf $jockjsPath
-      rm -rf ~/bin/jockjs
-      echo "Jockjs Cleand."
+      clean_install
       exit 0
    fi
 
