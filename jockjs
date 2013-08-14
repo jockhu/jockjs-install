@@ -98,6 +98,7 @@ function git_install(){
   if [ -z "$jockjsSite" ];then
     echo "Missing parameters."
   fi
+  
   if [ "$jockjsSite" = "touch" -o "$jockjsSite" = "developers" -o "$jockjsSite" = "user" -o "$jockjsSite" = "broker" ];then
     jockjsPath=/home/www/release/node/$jockjsSite
     if [ ! -e $jockjsPath ];then
@@ -149,7 +150,7 @@ function nodejs_install(){
     make
     sudo make install
     cd /usr/local/lib/node_modules
-    git clone https://github.com/mishoo/UglifyJS.git
+    sudo git clone https://github.com/mishoo/UglifyJS.git
     sudo npm install forever -g
     mkdir -p ~/.node_libraries
     cd ~/.node_libraries
@@ -166,7 +167,7 @@ function bash_install(){
   if [ ! -e ~/bin/jockjs ];then
     cp -r $jockjsPath/jockjs-config/jockjs ~/bin/jockjs
     echo "Copy files jockjs ..."
-    sudo echo 'export PATH=~/bin:$PATH' >> ~/.bash_profile 
+    sudo echo 'export PATH=~/bin:$PATH' >> ~/.profile
   fi
   if [ ! -z "$three" ];then
     ~/bin/jockjs domain "$three"
@@ -174,11 +175,33 @@ function bash_install(){
   fi
 }
 
+function clean_install(){
+  rm -rf $jockjsConfPath 
+  rm -rf $jockjsPath
+  rm -rf ~/bin/jockjs
+  echo "Jockjs cleand."
+}
+
+if [ "$commond" = "uninstall" ];then
+   clean_install
+   sudo rm -rf /usr/local/{bin/{node,npm},lib/node_modules/npm,lib/node,share/man/*/node.*}
+   echo "Nodejs removed."
+fi
+
 if [ "$commond" = "install" ];then
+   sudo mkdir -p $jockjsLogPath
+   sudo chown -R $USER:$USER $jockjsLogPath
+
    if [ -z "$version" ];then
      echo "Missing parameters."
      exit;
    fi
+
+   if [ "$version" = "clean" ];then
+      clean_install
+      exit 0
+   fi
+
    if [ -z "$three" ];then
      echo "Please enter your base domain"
      echo "eg: install [touch | user | developers | broker] jockjs.xxx.dev.anjuke.com"
@@ -187,7 +210,10 @@ if [ "$commond" = "install" ];then
      config_install
      bash_install
      nodejs_install
-     #rm -rf $jockjsPath/jockjs-config
+     sudo pkill node
+     rm -rf $jockjsPath/jockjs-config
+     ~/bin/jockjs start $version 
+     echo "Finished. Bye! "
    fi
    exit 0
 fi

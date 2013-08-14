@@ -68,7 +68,7 @@ exports.componentModules = ['utils','ui','logger'];
  * Default javascript host
  * @const
  */
-exports.jsHost= 'http://jockjs.jockhu.dev.anjuke.com/';
+exports.jsHost= 'http://jockjs.fp00.dev.anjuke.com/';
 
 /**
  * Default javascript path
@@ -80,7 +80,7 @@ exports.jsPath = 'tjs';
  * Default style hosts
  * @const
  */
-exports.cssHost = 'http://jockjs.jockhu.dev.anjuke.com/';
+exports.cssHost = 'http://jockjs.fp00.dev.anjuke.com/';
 
 /**
  * Default style path
