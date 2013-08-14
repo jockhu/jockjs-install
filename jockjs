@@ -111,6 +111,7 @@ function git_install(){
     git clone git@git.corp.anjuke.com:jockhu/jockjs-config
     git clone git@git.corp.anjuke.com:aifang/jockjs
     git clone git@git.corp.anjuke.com:aifang/jockcss
+    git clone git@git.corp.anjuke.com:site/jockjs-components  
     if [ "$jockjsSite" = "touch" ];then
       git clone git@git.corp.anjuke.com:site/jockjs-touch
     fi 
@@ -123,8 +124,6 @@ function git_install(){
     if [ "$jockjsSite" = "broker" ];then
       git clone git@git.corp.anjuke.com:site/jockjs-business-broker
     fi
-    git clone git@git.corp.anjuke.com:site/jockjs-components  
-
   else
     echo "Parameters error."
   fi
