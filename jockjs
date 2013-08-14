@@ -98,6 +98,7 @@ function git_install(){
   if [ -z "$jockjsSite" ];then
     echo "Missing parameters."
   fi
+  
   if [ "$jockjsSite" = "touch" -o "$jockjsSite" = "developers" -o "$jockjsSite" = "user" -o "$jockjsSite" = "broker" ];then
     jockjsPath=/home/www/release/node/$jockjsSite
     if [ ! -e $jockjsPath ];then
