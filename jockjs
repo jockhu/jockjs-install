@@ -1,17 +1,38 @@
 #!/bin/bash
 commond=$1
 version=$2
-if [ -z "$3" ];then
-    tpl="fp00"
+three=$3
+
+if [ "$commond" = "-h" ];then
+    echo ""
+    echo ""
+    echo "Exemple..."
+    echo ""
+    echo "jockjs install [touch | user | developers | broker] domain"
+    echo "  domain (domain eg: jockjs.jockhu.dev.anjuke.com)"
+    echo ""
+    echo "jockjs [start | restart | stop] [touch | user | developers | broker]"
+    echo ""
+    echo "jockjs list"
+    echo ""
+    echo "jockjs pull [touch | user | developers | broker]"
+    echo ""
+    echo ""
+    exit;
+fi
+
+
+if [ -z "$three" ];then
+    jockjsSite=fp00
 else
-    tpl=$3
+    jockjsSite=$three
 fi
 forever=/usr/local/bin/forever
 jockjsPath=/home/www/release/node
 jockjsLogPath=/data1/logs/node
 jockjsConfPath=/home/www/config/node
 
-if [ ! -f "$forever" ];then
+if [ ! -e "$forever" ];then
   forever=/home/www/bin/forever
 else
   forever=forever
@@ -29,22 +50,22 @@ function forever_action(){
 
 function forever_start(){
   if [ -z "$1" ];then
-    fpPath=fp00
+    sitePath=fp00
   else
-    fpPath=$1
+    sitePath=$1
   fi
-  $forever start -a -l $jockjsLogPath/js.log $jockjsPath/$fpPath/jockjs/service.js $jockjsConfPath/$fpPath.js
-  $forever start -a -l $jockjsLogPath/css.log $jockjsPath/$fpPath/jockcss/service.js $jockjsConfPath/$fpPath.css
+  $forever start -a -l $jockjsLogPath/js.log $jockjsPath/$sitePath/jockjs/service.js $jockjsConfPath/$sitePath.js
+  $forever start -a -l $jockjsLogPath/css.log $jockjsPath/$sitePath/jockcss/service.js $jockjsConfPath/$sitePath.css
 }
 
 function forever_stop(){
   if [ -z "$1" ];then
-    fpPath=fp00
+    sitePath=fp00
   else
-    fpPath=$1
+    sitePath=$1
   fi
-  $forever stop $jockjsPath/$fpPath/jockjs/service.js
-  $forever stop $jockjsPath/$fpPath/jockcss/service.js
+  $forever stop $jockjsPath/$sitePath/jockjs/service.js
+  $forever stop $jockjsPath/$sitePath/jockcss/service.js
 }
 
 function forever_list(){
@@ -72,37 +93,102 @@ function git_co_master(){
 }
 
 function git_install(){
-  if [ -z "$1" ];then
-    jockjsPath=/home/www/release/node/$1
-  else
-    jockjsPath=/home/www/release/node/fp00
+  jockjsSite=$1
+  if [ -z "$jockjsSite" ];then
+    echo "Missing parameters."
   fi
+  if [ "$jockjsSite" = "touch" -o "$jockjsSite" = "developers" -o "$jockjsSite" = "user" -o "$jockjsSite" = "broker" -o ];then
+    jockjsPath=/home/www/release/node/$jockjsSite
+    if [ -e $jockjsPath ];then
+      mkdir -p $jockjsPath
+    fi
 
-  if [ ! -f $jockjsPath ];then
-    mkdir -p $jockjsPath
-  fi
+    echo "Setting jockjs path: $jockjsPath"
+
+    cd $jockjsPath
   
-  echo "git path: $jockjsPath"
+    git clone git@git.corp.anjuke.com:aifang/jockjs
+    git clone git@git.corp.anjuke.com:aifang/jockcss
+    if [ "$jockjsSite" = "touch" ];then
+      git clone git@git.corp.anjuke.com:site/jockjs-touch
+    if
+    if [ "$jockjsSite" = "developers" ];then
+      git clone git@git.corp.anjuke.com:site/jockjs-business-developers
+    if
+    if [ "$jockjsSite" = "user" ];then
+      git clone git@git.corp.anjuke.com:site/jockjs-business-user
+    if
+    if [ "$jockjsSite" = "broker" ];then
+      git clone git@git.corp.anjuke.com:site/jockjs-business-broker
+    if
+    git clone git@git.corp.anjuke.com:site/jockjs-components  
+    git clone git@git.corp.anjuke.com:jockhu/jockjs-config
 
-  cd $jockjsPath
-  git clone git@git.corp.anjuke.com:aifang/jockjs
-  git clone git@git.corp.anjuke.com:aifang/jockcss
-  git clone git@git.corp.anjuke.com:site/jockjs-touch
-  git clone git@git.corp.anjuke.com:site/jockjs-components  
- 
+  else
+    echo "Parameters error."
+  fi
 }
 
 function config_install(){
-  mkdir -p $jockjsConfPath
-  cp -r ./fp00* $jockjsConfPath 
-echo `pwd` 
+  if [ ! -e $jockjsConfPath ];then
+    mkdir -p $jockjsConfPath
+    echo "Path $jockjsConfPath created."
+  fi
+  if [ ! -e $jockjsConfPath/fp00.js ];then
+    cp -r $jockjsPath/jockjs-config/fp00* $jockjsConfPath
+    echo "Copy files fp00 ..."
+  fi
 }
 
+function nodejs_install(){
+  if [ ! -e "/usr/local/bin/node" ];then
+    cd $jockjsPath/jockjs-config/
+    tar -zxf node-*
+    cd node-*
+    ./configure
+    make
+    make install
+    cd /usr/local/lib/node_modules
+    git clone https://github.com/mishoo/UglifyJS.git
+    npm install forever -g
+    mkdir -p ~/.node_libraries
+    cd ~/.node_libraries
+    ln -s /usr/local/lib/node_modules/UglifyJS/uglify-js.js 
+    echo "Node install finished."
+  fi
+}
 
+function bash_install(){
+  if [ ! -e ~/bin ];then
+    mkdir -p ~/bin
+    echo "Path ~/bin created."
+  fi
+  if [ ! -e ~/bin/jockjs ];then
+    cp -r $jockjsPath/jockjs-config/jockjs ~/bin/jockjs
+    echo "Copy files jockjs ..."
+    echo 'export PATH=~/bin:$PATH' >> ~/.bash_profile 
+  fi
+  if [ ! -z "$three" ];then
+    ~/bin/jockjs domain "$three"
+    echo "Base domian replaced."
+  fi
+}
 
-if [[ "$commond" = "install" && ! -z "$version" ]];then
-   git_install "$version"
-#   config_install
+if [ "$commond" = "install" ];then
+   if [ -z "$version" ];then
+     echo "Missing parameters."
+     exit;
+   fi
+   if [ -z "$three" ];then
+     echo "Please enter your base domain"
+     echo "eg: install [touch | user | developers | broker] jockjs.xxx.dev.anjuke.com"
+   else
+     #git_install "$version"
+     config_install
+     bash_install
+     node_install
+     #rm -rf $jockjsPath/jockjs-config
+   fi
    exit 0
 fi
 
@@ -110,8 +196,8 @@ fi
 
 if [[ "$commond" = "domain" && ! -z "$version" ]];then
     cd $jockjsConfPath
-    sed -i "" s#jockjs.fp00.dev.aifcdn.com#$version#g fp00.js
-    sed -i "" s#jockjs.fp00.dev.aifcdn.com#$version#g fp00.css
+    sed -i s#jockjs.fp00.dev.aifcdn.com#$version#g fp00.js
+    sed -i s#jockjs.fp00.dev.aifcdn.com#$version#g fp00.css
     echo ""
     echo "jockjs domain change to : $version "
     exit 0
@@ -122,13 +208,13 @@ if [[ "$commond" = "create" && ! -z "$version" ]];then
     v=${version:2:2}
     cd $jockjsPath
     rm -rf "$version"
-    cp -r "$tpl" "$version"
+    cp -r "$jockjsSite" "$version"
     #git_co_master "$version"
     cd $jockjsConfPath
-    cp "$tpl".js "$version".js
-    cp "$tpl".css "$version".css
-    sed -i s#$tpl#$version#g "$version".js
-    sed -i s#$tpl#$version#g "$version".css
+    cp "$jockjsSite".js "$version".js
+    cp "$jockjsSite".css "$version".css
+    sed -i s#$jockjsSite#$version#g "$version".js
+    sed -i s#$jockjsSite#$version#g "$version".css
     sed -i s#52100#521$v#g "$version".js
     sed -i s#52200#522$v#g "$version".css
     echo ""
