@@ -14,7 +14,7 @@
  * Default port
  * @const
  */
-exports.port = 52100; 
+exports.port = 52600; 
 
 /**
  * Default debug
@@ -38,13 +38,13 @@ exports.version = ''
  * Default root path
  * @const
  */
-exports.root = '/home/www/release/node/fp00/jockjs/libs';
+exports.root = '/home/www/release/node/touch/jockjs/libs';
 
 /**
  * Default user root path
  * @const
  */
-exports.userRoot = '/home/www/release/node/fp00/jockjs-touch';
+exports.userRoot = '/home/www/release/node/touch/jockjs-touch';
 
 /**
  * Default user modules
@@ -56,7 +56,7 @@ exports.userModules = ['site','touch'];
  * Default component root path
  * @const
  */
-exports.componentRoot = '/home/www/release/node/fp00/jockjs-components';
+exports.componentRoot = '/home/www/release/node/touch/jockjs-components';
 
 /**
  * Default user modules
@@ -68,7 +68,7 @@ exports.componentModules = ['utils','ui','logger'];
  * Default javascript host
  * @const
  */
-exports.jsHost= 'http://jockjs.fp00.dev.aifcdn.com/';
+exports.jsHost= 'http://SERVERNAME/';
 
 /**
  * Default javascript path
@@ -80,7 +80,7 @@ exports.jsPath = 'tjs';
  * Default style hosts
  * @const
  */
-exports.cssHost = 'http://jockjs.fp00.dev.aifcdn.com/';
+exports.cssHost= 'http://SERVERNAME/';
 
 /**
  * Default style path

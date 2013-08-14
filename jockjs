@@ -131,14 +131,33 @@ function git_install(){
 }
 
 function config_install(){
+  site=$1
   if [ ! -e $jockjsConfPath ];then
     mkdir -p $jockjsConfPath
     echo "Path $jockjsConfPath created."
   fi
-  if [ ! -e $jockjsConfPath/fp00.js ];then
-    cp -r $jockjsPath/jockjs-config/fp00.js $jockjsConfPath/$1.js
-    cp -r $jockjsPath/jockjs-config/fp00.css $jockjsConfPath/$1.css
+  if [ ! -e $jockjsConfPath/$site.js ];then
+    cp -r $jockjsPath/jockjs-config/conf/$site.js $jockjsConfPath/
+    cp -r $jockjsPath/jockjs-config/conf/$site.css $jockjsConfPath/
     echo "Copy config files..."
+  fi
+}
+
+function config_nginx(){
+  domain=$1
+  if [ -e /etc/nginx/sites-enabled/ ];then
+    sudo cp -r $jockjsPath/jockjs-config/conf/jockjs-nginx-dev.conf /etc/nginx/sites-enabled/
+    sudo sed -i s#SERVERNAME#$domain#g /etc/nginx/sites-enabled/jockjs-nginx-dev.conf
+    echo "/etc/nginx/sites-enabled/jockjs-nginx-dev.conf created."
+  fi
+}
+
+function config_apache(){
+  domain=$1
+  if [ -e /etc/apache2/sites-enabled/ ];then
+    sudo cp -r $jockjsPath/jockjs-config/conf/jockjs-apache-dev.conf /etc/apache2/sites-enabled/
+    sudo sed -i s#SERVERNAME#$domain#g /etc/apache2/sites-enabled/jockjs-apache-dev.conf
+    echo "/etc/apache2/sites-enabled/jockjs-apache-dev.conf created."
   fi
 }
 
@@ -209,6 +228,8 @@ if [ "$commond" = "install" ];then
    else
      git_install "$version"
      config_install "$version"
+     config_nginx "$three"
+     config_apache "$three"
      bash_install
      nodejs_install
      sudo pkill node
@@ -223,10 +244,10 @@ fi
 
 if [[ "$commond" = "domain" && ! -z "$version" && ! -z "$three" ]];then
     cd $jockjsConfPath
-    sed -i s#jockjs.fp00.dev.aifcdn.com#$three#g $version.js
-    sed -i s#jockjs.fp00.dev.aifcdn.com#$three#g $version.css
+    sed -i s#SERVERNAME#$three#g $version.js 
+    sed -i s#SERVERNAME#$three#g $version.css 
     echo ""
-    echo "jockjs domain change to : $version "
+    echo "Server Name change to : $version "
     exit 0
 fi
 
@@ -260,11 +281,15 @@ if [ "$commond" = "reload" -o "$commond" = "restart" -o "$commond" = "start" -o 
         if [ ! -z "$version" ];then
             git_pull "$version"
         else
-            echo "use jockjs pull fpxx"
+            echo "use jockjs pull touch"
        fi
     else
+        if [ -z "$version" ];then
+            echo "use jockjs pull touch"
+	    exit 0
+        fi
         forever_action "$commond" "$version"
     fi
 else
-    echo "use jockjs restart|reload|stop|start|list|pull"
+    echo "use jockjs [restart|reload|stop|start|list|pull] [touch|user|developers|broker]"
 fi

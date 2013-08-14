@@ -7,10 +7,6 @@
  * for the basic configuration of the framework.
  *
  *
- * example
- *
- *         node service.js 8000 true  false    20120101
- *                        port debug compress version
  *
  */
 
@@ -21,7 +17,7 @@
  * Default port
  * @const
  */
-exports.port = 52200; 
+exports.port = 52702; 
 
 /**
  * Default debug
@@ -45,19 +41,19 @@ exports.version = '';
  * Default root path
  * @const
  */
-exports.root = '/home/www/release/node/fp00/jockcss/libs';
+exports.root = '/home/www/release/node/developers/jockcss/libs';
 
 /**
  * Default cache path
  * @const
  */
-exports.cache = '/home/www/release/node/fp00/jockcss/cache';
+exports.cache = '/home/www/release/node/developers/jockcss/cache';
 
 /**
  * Default log path
  * @const
  */
-exports.logPath = '/home/www/release/node/fp00/jockcss/log';
+exports.logPath = '/home/www/release/node/developers/jockcss/log';
 
 /**
  * Default style hosts

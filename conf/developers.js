@@ -14,7 +14,7 @@
  * Default port
  * @const
  */
-exports.port = 52120; 
+exports.port = 52602; 
 
 /**
  * Default debug
@@ -38,13 +38,13 @@ exports.version = ''
  * Default root path
  * @const
  */
-exports.root = '/home/www/release/node/fp00/jockjs/libs';
+exports.root = '/home/www/release/node/developers/jockjs/libs';
 
 /**
  * Default user root path
  * @const
  */
-exports.userRoot = '/home/www/release/node/fp00/jockjs-business-user';
+exports.userRoot = '/home/www/release/node/developers/jockjs-business-developers';
 
 /**
  * Default user modules
@@ -56,7 +56,7 @@ exports.userModules = ['site','user'];
  * Default component root path
  * @const
  */
-exports.componentRoot = '/home/www/release/node/fp00/jockjs-components';
+exports.componentRoot = '/home/www/release/node/deveploers/jockjs-components';
 
 /**
  * Default user modules
@@ -68,25 +68,25 @@ exports.componentModules = ['utils','ui','logger'];
  * Default javascript host
  * @const
  */
-exports.jsHost = 'http://jockjs.fp00.dev.aifcdn.com/';
+exports.jsHost = 'http://SERVERNAME/';
 
 /**
  * Default javascript path
  * @const
  */
-exports.jsPath = 'js';
+exports.jsPath = 'djs';
 
 /**
  * Default style hosts
  * @const
  */
-exports.cssHost = 'http://jockjs.fp00.dev.aifcdn.com/';
+exports.cssHost = 'http://SERVERNAME/';
 
 /**
  * Default style path
  * @const
  */
-exports.cssPath = 'css';
+exports.cssPath = 'dcss';
 
 /**
  * Default except -> uglify object property
