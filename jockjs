@@ -180,6 +180,15 @@ if [ "$commond" = "install" ];then
      echo "Missing parameters."
      exit;
    fi
+
+   if [ "$version" = "clean" ];then
+      rm -rf $jockjsConfPath 
+      rm -rf $jockjsPath
+      rm -rf ~/bin/jockjs
+      echo "Jockjs Cleand."
+      exit 0
+   fi
+
    if [ -z "$three" ];then
      echo "Please enter your base domain"
      echo "eg: install [touch | user | developers | broker] jockjs.xxx.dev.anjuke.com"
