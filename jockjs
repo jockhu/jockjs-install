@@ -2,6 +2,8 @@
 commond=$1
 version=$2
 three=$3
+pwdPath=`pwd`
+
 
 if [ "$commond" = "-h" ];then
     echo ""
@@ -20,7 +22,6 @@ if [ "$commond" = "-h" ];then
     echo ""
     exit;
 fi
-
 
 if [ -z "$three" ];then
     jockjsSite=fp00
@@ -97,9 +98,9 @@ function git_install(){
   if [ -z "$jockjsSite" ];then
     echo "Missing parameters."
   fi
-  if [ "$jockjsSite" = "touch" -o "$jockjsSite" = "developers" -o "$jockjsSite" = "user" -o "$jockjsSite" = "broker" -o ];then
+  if [ "$jockjsSite" = "touch" -o "$jockjsSite" = "developers" -o "$jockjsSite" = "user" -o "$jockjsSite" = "broker" ];then
     jockjsPath=/home/www/release/node/$jockjsSite
-    if [ -e $jockjsPath ];then
+    if [ ! -e $jockjsPath ];then
       mkdir -p $jockjsPath
     fi
 
@@ -107,22 +108,22 @@ function git_install(){
 
     cd $jockjsPath
   
+    git clone git@git.corp.anjuke.com:jockhu/jockjs-config
     git clone git@git.corp.anjuke.com:aifang/jockjs
     git clone git@git.corp.anjuke.com:aifang/jockcss
     if [ "$jockjsSite" = "touch" ];then
       git clone git@git.corp.anjuke.com:site/jockjs-touch
-    if
+    fi 
     if [ "$jockjsSite" = "developers" ];then
       git clone git@git.corp.anjuke.com:site/jockjs-business-developers
-    if
+    fi
     if [ "$jockjsSite" = "user" ];then
       git clone git@git.corp.anjuke.com:site/jockjs-business-user
-    if
+    fi
     if [ "$jockjsSite" = "broker" ];then
       git clone git@git.corp.anjuke.com:site/jockjs-business-broker
-    if
+    fi
     git clone git@git.corp.anjuke.com:site/jockjs-components  
-    git clone git@git.corp.anjuke.com:jockhu/jockjs-config
 
   else
     echo "Parameters error."
@@ -147,10 +148,10 @@ function nodejs_install(){
     cd node-*
     ./configure
     make
-    make install
+    sudo make install
     cd /usr/local/lib/node_modules
     git clone https://github.com/mishoo/UglifyJS.git
-    npm install forever -g
+    sudo npm install forever -g
     mkdir -p ~/.node_libraries
     cd ~/.node_libraries
     ln -s /usr/local/lib/node_modules/UglifyJS/uglify-js.js 
@@ -166,7 +167,7 @@ function bash_install(){
   if [ ! -e ~/bin/jockjs ];then
     cp -r $jockjsPath/jockjs-config/jockjs ~/bin/jockjs
     echo "Copy files jockjs ..."
-    echo 'export PATH=~/bin:$PATH' >> ~/.bash_profile 
+    sudo echo 'export PATH=~/bin:$PATH' >> ~/.bash_profile 
   fi
   if [ ! -z "$three" ];then
     ~/bin/jockjs domain "$three"
@@ -183,10 +184,10 @@ if [ "$commond" = "install" ];then
      echo "Please enter your base domain"
      echo "eg: install [touch | user | developers | broker] jockjs.xxx.dev.anjuke.com"
    else
-     #git_install "$version"
+     git_install "$version"
      config_install
      bash_install
-     node_install
+     nodejs_install
      #rm -rf $jockjsPath/jockjs-config
    fi
    exit 0
