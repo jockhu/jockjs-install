@@ -221,10 +221,10 @@ fi
 
 
 
-if [[ "$commond" = "domain" && ! -z "$version" ]];then
+if [[ "$commond" = "domain" && ! -z "$version" && ! -z "$three" ]];then
     cd $jockjsConfPath
-    sed -i s#jockjs.fp00.dev.aifcdn.com#$version#g $version.js
-    sed -i s#jockjs.fp00.dev.aifcdn.com#$version#g $version.css
+    sed -i s#jockjs.fp00.dev.aifcdn.com#$version#g $three.js
+    sed -i s#jockjs.fp00.dev.aifcdn.com#$version#g $three.css
     echo ""
     echo "jockjs domain change to : $version "
     exit 0
