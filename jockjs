@@ -190,7 +190,7 @@ fi
 
 if [ "$commond" = "install" ];then
    sudo mkdir -p $jockjsLogPath
-   sudo chown -r $USER:$USER $jockjsLogPath
+   sudo chown -R $USER:$USER $jockjsLogPath
 
    if [ -z "$version" ];then
      echo "Missing parameters."
