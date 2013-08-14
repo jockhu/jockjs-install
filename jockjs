@@ -171,7 +171,7 @@ function bash_install(){
     sudo echo 'export PATH=~/bin:$PATH' >> ~/.profile
   fi
   if [ ! -z "$three" ];then
-    ~/bin/jockjs domain "$three"
+    ~/bin/jockjs domain "$version" "$three" 
     echo "Base domian replaced."
   fi
 }
@@ -223,8 +223,8 @@ fi
 
 if [[ "$commond" = "domain" && ! -z "$version" && ! -z "$three" ]];then
     cd $jockjsConfPath
-    sed -i s#jockjs.fp00.dev.aifcdn.com#$version#g $three.js
-    sed -i s#jockjs.fp00.dev.aifcdn.com#$version#g $three.css
+    sed -i s#jockjs.fp00.dev.aifcdn.com#$three#g $version.js
+    sed -i s#jockjs.fp00.dev.aifcdn.com#$three#g $version.css
     echo ""
     echo "jockjs domain change to : $version "
     exit 0
