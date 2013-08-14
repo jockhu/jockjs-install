@@ -167,7 +167,7 @@ function bash_install(){
   if [ ! -e ~/bin/jockjs ];then
     cp -r $jockjsPath/jockjs-config/jockjs ~/bin/jockjs
     echo "Copy files jockjs ..."
-    sudo echo 'export PATH=~/bin:$PATH' >> ~/.bash_profile 
+    sudo echo 'export PATH=~/bin:$PATH' >> ~/.profile
   fi
   if [ ! -z "$three" ];then
     ~/bin/jockjs domain "$three"
