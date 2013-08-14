@@ -149,6 +149,7 @@ function config_nginx(){
     sudo cp -r $jockjsPath/jockjs-config/conf/jockjs-nginx-dev.conf /etc/nginx/sites-enabled/
     sudo sed -i s#SERVERNAME#$domain#g /etc/nginx/sites-enabled/jockjs-nginx-dev.conf
     echo "/etc/nginx/sites-enabled/jockjs-nginx-dev.conf created."
+    sudo nginx -s reload
   fi
 }
 
@@ -158,6 +159,7 @@ function config_apache(){
     sudo cp -r $jockjsPath/jockjs-config/conf/jockjs-apache-dev.conf /etc/apache2/sites-enabled/
     sudo sed -i s#SERVERNAME#$domain#g /etc/apache2/sites-enabled/jockjs-apache-dev.conf
     echo "/etc/apache2/sites-enabled/jockjs-apache-dev.conf created."
+    sudo service apache2 reload
   fi
 }
 
@@ -174,6 +176,7 @@ function nodejs_install(){
     sudo npm install forever -g
     mkdir -p ~/.node_libraries
     cd ~/.node_libraries
+    rm uglify-js.js
     ln -s /usr/local/lib/node_modules/UglifyJS/uglify-js.js 
     echo "Node install finished."
   fi
