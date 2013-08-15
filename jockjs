@@ -233,9 +233,9 @@ function bash_install(){
 }
 
 function clean_install(){
-  rm -rf $jockjsConfPath 
-  rm -rf $jockjsPath
-  rm -rf ~/bin/jockjs
+  sudo rm -rf $jockjsConfPath 
+  sudo rm -rf $jockjsPath
+  sudo rm -rf ~/bin/jockjs
   echo "Jockjs cleand."
 }
 
