@@ -223,6 +223,7 @@ if [ "$commond" = "uninstall" ];then
    sudo rm -rf /usr/local/{bin/{node,npm},lib/node_modules/npm,lib/node,share/man/*/node.*}
    rm -rf ~/.node_libraries
    echo "Nodejs removed."
+   exit 0
 fi
 
 if [ "$commond" = "install" ];then
