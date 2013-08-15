@@ -8,7 +8,7 @@ sys=`uname -a | awk -F " " '{print $1}'`
 if [ "$commond" = "-h" ];then
     echo ""
     echo ""
-    echo "Exemple..."
+    echo "Example..."
     echo ""
     echo "jockjs install [touch | user | developers | broker] domain"
     echo "  domain (domain eg: jockjs.jockhu.dev.anjuke.com)"
