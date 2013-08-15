@@ -212,7 +212,7 @@ function nodejs_install(){
   fi
   mkdir -p ~/.node_libraries
   cd ~/.node_libraries
-  rm uglify-js.js
+  sudo rm uglify-js.js
   ln -s /usr/local/lib/node_modules/UglifyJS/uglify-js.js
 }
 
@@ -242,7 +242,7 @@ function clean_install(){
 if [ "$commond" = "uninstall" ];then
    clean_install
    sudo rm -rf /usr/local/{bin/{node,npm},lib/node_modules/npm,lib/node,share/man/*/node.*}
-   rm -rf ~/.node_libraries
+   sudo rm -rf ~/.node_libraries
    echo "Nodejs removed."
    exit 0
 fi
@@ -272,7 +272,7 @@ if [ "$commond" = "install" ];then
      bash_install
      nodejs_install
      sudo pkill node
-     rm -rf $jockjsPath/jockjs-config
+     sudo rm -rf $jockjsPath/jockjs-config
      ~/bin/jockjs start $version 
      echo "Finished. Bye! "
    fi
