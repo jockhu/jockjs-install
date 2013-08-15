@@ -267,7 +267,7 @@ if [ "$commond" = "install" ];then
      bash_install
      nodejs_install
      sudo pkill node
-#     rm -rf $jockjsPath/jockjs-config
+     rm -rf $jockjsPath/jockjs-config
      ~/bin/jockjs start $version 
      echo "Finished. Bye! "
    fi
