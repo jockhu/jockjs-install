@@ -28,13 +28,13 @@ if [ -z "$three" ];then
 else
     jockjsSite=$three
 fi
-forever=/usr/local/bin/forever
+forever=/home/www/bin/forever
 jockjsPath=/home/www/release/node
 jockjsLogPath=/data1/logs/node
 jockjsConfPath=/home/www/config/node
 
 if [ ! -e "$forever" ];then
-  forever=/home/www/bin/forever
+  forever=/usr/local/bin/forever
 else
   forever=forever
 fi
