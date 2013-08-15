@@ -118,6 +118,8 @@ function git_install(){
     if [ ! -e $jockjsPath ];then
       mkdir -p $jockjsPath
     fi
+    
+    sudo chown -R $USER:$GROUP $jockjsPath
 
     echo "Setting jockjs path: $jockjsPath"
 
@@ -150,6 +152,9 @@ function config_install(){
     mkdir -p $jockjsConfPath
     echo "Path $jockjsConfPath created."
   fi
+  
+  sudo chown -R $USER:$GROUP $jockjsConfPath
+  
   if [ ! -e $jockjsConfPath/$site.js ];then
     cp -r $jockjsPath/jockjs-config/conf/$site.js $jockjsConfPath/
     cp -r $jockjsPath/jockjs-config/conf/$site.css $jockjsConfPath/
