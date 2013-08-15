@@ -116,7 +116,7 @@ function git_install(){
   if [ "$jockjsSite" = "touch" -o "$jockjsSite" = "developers" -o "$jockjsSite" = "user" -o "$jockjsSite" = "broker" ];then
     jockjsPath=/home/www/release/node/$jockjsSite
     if [ ! -e $jockjsPath ];then
-      mkdir -p $jockjsPath
+      sudo mkdir -p $jockjsPath
     fi
     
     sudo chown -R $USER:$GROUP $jockjsPath
@@ -149,7 +149,7 @@ function git_install(){
 function config_install(){
   site=$1
   if [ ! -e $jockjsConfPath ];then
-    mkdir -p $jockjsConfPath
+    sudo mkdir -p $jockjsConfPath
     echo "Path $jockjsConfPath created."
   fi
   
