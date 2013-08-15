@@ -3,7 +3,7 @@ commond=$1
 version=$2
 three=$3
 pwdPath=`pwd`
-
+sys=`uname -a | awk -F " " '{print $1}'`
 
 if [ "$commond" = "-h" ];then
     echo ""
@@ -40,7 +40,6 @@ else
 fi
 
 function forever_action(){
-echo "$1,$2"
   if [ "$1" = "start" -o "$1" = "restart" -o "$1" = "reload" ];then
     forever_stop $2
     forever_start $2
@@ -83,7 +82,8 @@ function git_pull(){
      git branch
      git pull --rebase;
   else
-    ls | while read path; do 
+    for path in `ls`
+    do
     cd $jockjsPath/$1/$path;
     echo "current path : $jockjsPath/$1/$path";
     if [ ! -z "$2" ];then
@@ -98,7 +98,8 @@ function git_pull(){
 
 function git_co_master(){
   cd $jockjsPath/$1
-  ls | while read path; do 
+  for path in `ls`
+  do
     cd $jockjsPath/$1/$path;
     echo "current path : $jockjsPath/$1/$path";
     git co master
@@ -184,15 +185,22 @@ function nodejs_install(){
     ./configure
     make
     sudo make install
-    cd /usr/local/lib/node_modules
-    sudo git clone https://github.com/mishoo/UglifyJS.git
-    sudo npm install forever -g
-    mkdir -p ~/.node_libraries
-    cd ~/.node_libraries
-    rm uglify-js.js
-    ln -s /usr/local/lib/node_modules/UglifyJS/uglify-js.js 
     echo "Node install finished."
   fi
+  if [ ! -e "$forever" ];then
+    cd /usr/local/lib/node_modules
+    sudo npm install forever -g
+    echo "Forever install finished."
+  fi
+  if [ ! -e "/usr/local/lib/node_modules/UglifyJS" ];then
+    cd /usr/local/lib/node_modules
+    sudo git clone https://github.com/mishoo/UglifyJS.git
+    echo "UglifyJS install finished."
+  fi
+  mkdir -p ~/.node_libraries
+  cd ~/.node_libraries
+  rm uglify-js.js
+  ln -s /usr/local/lib/node_modules/UglifyJS/uglify-js.js
 }
 
 function bash_install(){
@@ -304,8 +312,11 @@ if [ "$commond" = "reload" -o "$commond" = "restart" -o "$commond" = "start" -o 
         forever_$commond
         exit
     fi 
-   
-    forever_action "$commond" "$version"
+    if [ ! -z "$version" ]; then 
+        forever_action "$commond" "$version"
+    else
+        echo "Missing parameters."
+    fi
 else
     echo "use jockjs [restart|reload|stop|start|list|pull] [touch|user|developers|broker]"
 fi
