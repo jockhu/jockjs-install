@@ -10,10 +10,10 @@ if [ "$commond" = "-h" ];then
     echo ""
     echo "Example..."
     echo ""
-    echo "jockjs install [touch | user | developers | broker] domain"
+    echo "jockjs install [touch | pad | user | developers | broker] domain"
     echo "  domain (domain eg: jockjs.jockhu.dev.anjuke.com)"
     echo ""
-    echo "jockjs [start | restart | stop] [touch | user | developers | broker]"
+    echo "jockjs [start | restart | stop] [touch | pad | user | developers | broker]"
     echo ""
     echo "jockjs list"
     echo ""
@@ -113,7 +113,7 @@ function git_install(){
     echo "Missing parameters."
   fi
   
-  if [ "$jockjsSite" = "touch" -o "$jockjsSite" = "developers" -o "$jockjsSite" = "user" -o "$jockjsSite" = "broker" ];then
+  if [ "$jockjsSite" = "touch" -o "$jockjsSite" = "developers" -o "$jockjsSite" = "pad" -o "$jockjsSite" = "user" -o "$jockjsSite" = "broker" ];then
     jockjsPath=/home/www/release/node/$jockjsSite
     if [ ! -e $jockjsPath ];then
       sudo mkdir -p $jockjsPath
@@ -131,6 +131,9 @@ function git_install(){
     git clone git@git.corp.anjuke.com:site/jockjs-components  
     if [ "$jockjsSite" = "touch" ];then
       git clone git@git.corp.anjuke.com:site/jockjs-touch
+    fi 
+    if [ "$jockjsSite" = "pad" ];then
+      git clone git@git.corp.anjuke.com:site/jockjs-business-pad
     fi 
     if [ "$jockjsSite" = "developers" ];then
       git clone git@git.corp.anjuke.com:site/jockjs-business-developers
