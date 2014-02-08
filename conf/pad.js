@@ -14,7 +14,7 @@
  * Default port
  * @const
  */
-exports.port = 52600; 
+exports.port = 52604; 
 
 /**
  * Default debug
