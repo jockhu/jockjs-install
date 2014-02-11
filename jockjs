@@ -17,7 +17,7 @@ if [ "$commond" = "-h" ];then
     echo ""
     echo "jockjs list"
     echo ""
-    echo "jockjs pull [touch | user | developers | broker] co master [jockjs|jockcss|jockjs-components|...]"
+    echo "jockjs pull [touch | pad | user | developers | broker] co master [jockjs|jockcss|jockjs-components|...]"
     echo ""
     echo ""
     exit;
@@ -268,7 +268,7 @@ if [ "$commond" = "install" ];then
 
    if [ -z "$three" ];then
      echo "Please enter your base domain"
-     echo "eg: install [touch | user | developers | broker] jockjs.xxx.dev.anjuke.com"
+     echo "eg: install [touch | user | pad | developers | broker] jockjs.xxx.dev.anjuke.com"
    else
      git_install "$version"
      config_install "$version"
@@ -343,7 +343,7 @@ if [ "$commond" = "reload" -o "$commond" = "restart" -o "$commond" = "start" -o 
         echo "Missing parameters."
     fi
 else
-    echo "use jockjs [restart|reload|stop|start|list|pull] [touch|user|developers|broker]"
+    echo "use jockjs [restart|reload|stop|start|list|pull] [touch|pad|user|developers|broker]"
 fi
 
 
