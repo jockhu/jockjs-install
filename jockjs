@@ -120,8 +120,10 @@ function git_install(){
     fi
     
     sudo chown -R $USER:$GROUP $jockjsPath
-
     echo "Setting jockjs path: $jockjsPath"
+    sudo chown -R $USER:$GROUP /usr/local/bin
+    sudo chown -R $USER:$GROUP /usr/local/lib
+    echo "Chown /usr/local/{bin,lib} finished. "
 
     cd $jockjsPath
   
@@ -195,7 +197,7 @@ function config_apache(){
 
 function nodejs_install(){
   #sudo apt-get -y update
-  #sudo apt-get -y install python-software-properties python g++ make
+  sudo apt-get -y install python-software-properties python g++ make
   if [ ! -e "/usr/local/bin/node" ];then
     cd $jockjsPath/jockjs-config/
     tar -zxf node-*
@@ -215,9 +217,10 @@ function nodejs_install(){
     sudo git clone https://github.com/mishoo/UglifyJS.git
     echo "UglifyJS install finished."
     mkdir -p ~/.node_libraries
-    cd ~/.node_libraries
-    sudo rm uglify-js.js
-    ln -s /usr/local/lib/node_modules/UglifyJS/uglify-js.js
+    if [ ! -e "~/.node_libraries/uglify-js.js" ];then
+      sudo rm ~/.node_libraries/uglify-js.js
+    fi
+    ln -s /usr/local/lib/node_modules/UglifyJS/uglify-js.js ~/.node_libraries
   fi
 }
 
@@ -230,6 +233,7 @@ function bash_install(){
     cp -r $jockjsPath/jockjs-config/jockjs ~/bin/jockjs
     echo "Copy files jockjs ..."
     sudo echo 'export PATH=~/bin:$PATH' >> ~/.profile
+    source ~/.profile
   fi
   if [ ! -z "$three" ];then
     ~/bin/jockjs domain "$version" "$three" 
@@ -246,7 +250,7 @@ function clean_install(){
 
 if [ "$commond" = "uninstall" ];then
    clean_install
-   sudo rm -rf /usr/local/{bin/{node,npm},lib/node_modules/npm,lib/node,share/man/*/node.*}
+   sudo rm -rf /usr/local/{bin/{node,npm,forever},lib/node_modules/npm,lib/node,share/man/*/node.*}
    sudo rm -rf ~/.node_libraries
    echo "Nodejs removed."
    exit 0
