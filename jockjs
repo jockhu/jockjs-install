@@ -207,10 +207,11 @@ function config_apache(){
     conf=`sudo $ctl -V | grep -E 'SERVER_CONFIG_FILE' | awk -F '"' '{print $2}'`
     configFile=$root/$conf
   fi
-  echo "... "
-  echo "Apache setting... "
-  echo "Config root: $configFile"
+  
   if [ -e "$configFile" ];then
+    echo "... "
+    echo "Apache setting... "
+    echo "Config root: $configFile"
     set_config "$domain" "$configFile" "apache" 
     sudo service apache2 reload
   fi 
