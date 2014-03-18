@@ -362,7 +362,11 @@ if [ "$commond" = "install" ];then
      echo ""
      echo "Example..."
      echo ""
-     jsT=`echo "$version" | awk '{print substr($0,0,1)}'`;
+     if [ "$sys" = "Darwin" ];then
+      jsT=`echo "$version" | awk '{print substr($0,0,1)}'`;
+     else
+      jsT=`echo "$version" | awk '{print substr($0,1,1)}'`;
+     fi
      echo "http://$three/${jsT}js/base/ok.js"
      echo ""
      echo ""
