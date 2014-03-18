@@ -180,7 +180,9 @@ function config_install(){
 function config_nginx(){
   domain=$1
   configFile=$2
-  echo "\nNginx setting... \nConfig root: $configFile"
+  echo "... "
+  echo "Nginx setting... "
+  echo "Config root: $configFile"
   if [ -z "$configFile" ];then
     configFile=/etc/nginx/nginx.conf
   fi 
@@ -193,7 +195,9 @@ function config_nginx(){
 function config_apache(){
   domain=$1
   configFile=$2
-  echo "\nApache setting... \nConfig root: $configFile"
+  echo "... "
+  echo "Apache setting... "
+  echo "Config root: $configFile"
   if [ -z "$configFile" ];then
     root=`sudo apachectl -V | grep -E 'HTTPD_ROOT' | awk -F '"' '{print $2}'`
     conf=`sudo apachectl -V | grep -E 'SERVER_CONFIG_FILE' | awk -F '"' '{print $2}'`
@@ -221,10 +225,12 @@ function set_config(){
     if [ "$sys" = "Darwin" ];then
         sudo gsed -i s#SERVERNAME#$domain#g $conf_path 
         confLink=`echo $conf_path | gsed 's#\/#\\\/#g'`
+        sudo gsed -i "/.*$confLink.*/"d $confF    
         sudo gsed -i "0,/include/s/.*include.*/    include $confLink;\n&/" $confF    
     else
         sudo sed -i s#SERVERNAME#$domain#g $conf_path
         confLink=`echo $conf_path | sed 's#\/#\\\/#g'`
+        sudo sed -i "/.*$confLink.*/"d $confF    
         sudo sed -i "0,/Include/s/.*Include.*/Include $confLink;\n&/" $confF    
         if [ "confType" = "apache" ];then
             sudo a2enmod rewrite proxy proxy_connect proxy_http
