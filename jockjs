@@ -242,7 +242,6 @@ function set_config(){
 function config_nginx_apache(){
   domain=$1
   configFile=$2
-  echo "----$domain,$configFile"
   if [[ "$configFile" =~ "nginx" ]];then
      config_nginx "$domain" "$configFile"
   fi
