@@ -334,8 +334,8 @@ if [ "$commond" = "install" ];then
      bash_install
      nodejs_install
      sudo pkill node
-     sudo rm -rf $jockjsPath/jockjs-config
      config_nginx_apache "$three" "$sconfigFile"
+     sudo rm -rf $jockjsPath/jockjs-config
      ~/bin/jockjs start $version 
      ~/bin/jockjs pull $version checkout master
      echo ""
