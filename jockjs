@@ -247,17 +247,17 @@ function set_config(){
 
 function config_nginx_apache(){
   domain=$1
-  configFile=$2
-  if [[ "$configFile" =~ "nginx" ]];then
-     config_nginx "$domain" "$configFile"
+  configroot=$2
+  if [[ "$configroot" =~ "nginx" ]];then
+     config_nginx "$domain" "$configroot"
      exit;
   fi
-  if [[ "$configFile" =~ "apache" || "$configFile" =~ "http" ]];then
-     config_apache "$domain" "$configFile"
+  if [[ "$configroot" =~ "apache" || "$configroot" =~ "http" ]];then
+     config_apache "$domain" "$configroot"
      exit;
   fi
-  config_nginx "$domain" "$configFile"
-  config_apache "$domain" "$configFile"
+  config_nginx "$domain" "$configroot"
+  config_apache "$domain" "$configroot"
 }
 
 function nodejs_install(){
