@@ -180,7 +180,7 @@ function config_install(){
 function config_nginx(){
   domain=$1
   configFile=$2
-  echo "Config File: $configFile"
+  echo "Nginx Config File: $configFile"
   if [ -z "$configFile" ];then
     configFile=/etc/nginx/nginx.conf
   fi 
@@ -197,7 +197,7 @@ function config_nginx(){
 function config_apache(){
   domain=$1
   configFile=$2
-  echo "Config File: $configFile"
+  echo "Apache Config File: $configFile"
   if [ -z "$configFile" ];then
     root=`sudo apachectl -V | grep -E 'HTTPD_ROOT' | awk -F '"' '{print $2}'`
     conf=`sudo apachectl -V | grep -E 'SERVER_CONFIG_FILE' | awk -F '"' '{print $2}'`
