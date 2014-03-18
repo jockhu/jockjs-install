@@ -255,11 +255,11 @@ function config_nginx_apache(){
   configroot=$2
   if [[ "$configroot" =~ "nginx" ]];then
      config_nginx "$domain" "$configroot"
-     exit;
+     return
   fi
   if [[ "$configroot" =~ "apache" || "$configroot" =~ "http" ]];then
      config_apache "$domain" "$configroot"
-     exit;
+     return
   fi
   config_nginx "$domain" "$configroot"
   config_apache "$domain" "$configroot"
@@ -360,6 +360,10 @@ if [ "$commond" = "install" ];then
      echo "Good luck. Bye! "
      echo ""
      echo ""
+     echo "Example..."
+     echo ""
+     jsT=`echo "$version" | awk '{print substr($0,0,1)}'`;
+     echo "http://$three/${jsT}js/base/ok.js"
      echo ""
      echo ""
      echo ""
