@@ -184,12 +184,13 @@ function config_nginx(){
     configFile=/etc/nginx/nginx.conf
   fi 
   if [ -e "$configFile" ];then
+    echo "... "
+    echo "Nginx setting... "
+    echo "Config root: $configFile"
     set_config "$domain" "$configFile" "nginx" 
     sudo nginx -s reload
   fi 
-  echo "... "
-  echo "Nginx setting... "
-  echo "Config root: $configFile"
+  
 }
 
 function config_apache(){
@@ -206,13 +207,14 @@ function config_apache(){
     conf=`sudo $ctl -V | grep -E 'SERVER_CONFIG_FILE' | awk -F '"' '{print $2}'`
     configFile=$root/$conf
   fi
+  echo "... "
+  echo "Apache setting... "
+  echo "Config root: $configFile"
   if [ -e "$configFile" ];then
     set_config "$domain" "$configFile" "apache" 
     sudo service apache2 reload
   fi 
-  echo "... "
-  echo "Apache setting... "
-  echo "Config root: $configFile"
+  
 }
 
 function set_config(){
