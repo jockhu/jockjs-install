@@ -180,10 +180,9 @@ function config_install(){
 function config_nginx(){
   domain=$1
   configFile=$2
-  echo "Nginx Config File: $configFile"
+  #echo "Nginx Config File: $configFile"
   if [ -z "$configFile" ];then
     configFile=/etc/nginx/nginx.conf
-    echo "_______________$configFile"
   fi 
   if [ -e "$configFile" ];then
     echo "... "
@@ -198,7 +197,7 @@ function config_nginx(){
 function config_apache(){
   domain=$1
   configFile=$2
-  echo "Apache Config File: $configFile"
+  #echo "Apache Config File: $configFile"
   if [ -z "$configFile" ];then
     root=`sudo apachectl -V | grep -E 'HTTPD_ROOT' | awk -F '"' '{print $2}'`
     conf=`sudo apachectl -V | grep -E 'SERVER_CONFIG_FILE' | awk -F '"' '{print $2}'`
@@ -232,17 +231,35 @@ function set_config(){
         sudo gsed -i s#SERVERNAME#$domain#g $conf_path 
         confLink=`echo $conf_path | gsed 's#\/#\\\/#g'`
         sudo gsed -i "/.*$confLink.*/"d $confF    
-        sudo gsed -i "0,/include/s/.*include.*/    include $confLink;\n&/" $confF    
+        if [ "confType" = "nginx" ];then
+          sudo gsed -i "0,/include/s/.*include.*/    include $confLink;\n&/" $confF    
+        else
+          sudo gsed -i "0,/Include/s/.*Include.*/Include $confLink\n&/" $confF    
+        fi
     else
         sudo sed -i s#SERVERNAME#$domain#g $conf_path
         confLink=`echo $conf_path | sed 's#\/#\\\/#g'`
         sudo sed -i "/.*$confLink.*/"d $confF    
-        sudo sed -i "0,/Include/s/.*Include.*/Include $confLink;\n&/" $confF    
+        if [ "confType" = "nginx" ];then
+          sudo sed -i "0,/include/s/.*include.*/    include $confLink;\n&/" $confF    
+        else
+          sudo sed -i "0,/Include/s/.*Include.*/Include $confLink\n&/" $confF    
+        fi
+
         if [ "confType" = "apache" ];then
             sudo a2enmod rewrite proxy proxy_connect proxy_http
         fi
     fi
     echo "$confF is successful."
+}
+
+function config_link(){
+  cLink=$1
+  cFile=$2
+  cType=$3
+  if [ "$cType" = "nginx" ];then
+    
+  fi
 }
 
 function config_nginx_apache(){
