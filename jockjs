@@ -244,22 +244,10 @@ function set_config(){
           sudo sed -i "0,/include/s/.*include.*/    include $confLink;\n&/" $confF    
         else
           sudo sed -i "0,/Include/s/.*Include.*/Include $confLink\n&/" $confF    
-        fi
-
-        if [ "confType" = "apache" ];then
-            sudo a2enmod rewrite proxy proxy_connect proxy_http
+          sudo a2enmod rewrite proxy proxy_connect proxy_http
         fi
     fi
     echo "$confF is successful."
-}
-
-function config_link(){
-  cLink=$1
-  cFile=$2
-  cType=$3
-  if [ "$cType" = "nginx" ];then
-    
-  fi
 }
 
 function config_nginx_apache(){
