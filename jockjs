@@ -180,9 +180,6 @@ function config_install(){
 function config_nginx(){
   domain=$1
   configFile=$2
-  echo "... "
-  echo "Nginx setting... "
-  echo "Config root: $configFile"
   if [ -z "$configFile" ];then
     configFile=/etc/nginx/nginx.conf
   fi 
@@ -190,14 +187,14 @@ function config_nginx(){
     set_config "$domain" "$configFile" "nginx" 
     sudo nginx -s reload
   fi 
+  echo "... "
+  echo "Nginx setting... "
+  echo "Config root: $configFile"
 }
 
 function config_apache(){
   domain=$1
   configFile=$2
-  echo "... "
-  echo "Apache setting... "
-  echo "Config root: $configFile"
   if [ -z "$configFile" ];then
     root=`sudo apachectl -V | grep -E 'HTTPD_ROOT' | awk -F '"' '{print $2}'`
     conf=`sudo apachectl -V | grep -E 'SERVER_CONFIG_FILE' | awk -F '"' '{print $2}'`
@@ -213,6 +210,9 @@ function config_apache(){
     set_config "$domain" "$configFile" "apache" 
     sudo service apache2 reload
   fi 
+  echo "... "
+  echo "Apache setting... "
+  echo "Config root: $configFile"
 }
 
 function set_config(){
@@ -244,10 +244,14 @@ function config_nginx_apache(){
   configFile=$2
   if [[ "$configFile" =~ "nginx" ]];then
      config_nginx "$domain" "$configFile"
+     exit;
   fi
   if [[ "$configFile" =~ "apache" || "$configFile" =~ "http" ]];then
      config_apache "$domain" "$configFile"
+     exit;
   fi
+  config_nginx "$domain" "$configFile"
+  config_apache "$domain" "$configFile"
 }
 
 function nodejs_install(){
