@@ -183,6 +183,7 @@ function config_nginx(){
   echo "Nginx Config File: $configFile"
   if [ -z "$configFile" ];then
     configFile=/etc/nginx/nginx.conf
+    echo "_______________$configFile"
   fi 
   if [ -e "$configFile" ];then
     echo "... "
