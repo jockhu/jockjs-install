@@ -183,15 +183,14 @@ function config_nginx(){
   #echo "Nginx Config File: $configFile"
   if [ -z "$configFile" ];then
     configFile=/etc/nginx/nginx.conf
-  fi 
-  if [ -e "$configFile" ];then
+  fi
+  if [[ "$configFile" =~ "nginx" && -e "$configFile" ]];then
     echo "... "
     echo "Nginx setting... "
     echo "Config root: $configFile"
     set_config "$domain" "$configFile" "nginx" 
     sudo nginx -s reload
   fi 
-  
 }
 
 function config_apache(){
@@ -209,13 +208,14 @@ function config_apache(){
     conf=`sudo $ctl -V | grep -E 'SERVER_CONFIG_FILE' | awk -F '"' '{print $2}'`
     configFile=$root/$conf
   fi
-  
   if [ -e "$configFile" ];then
     echo "... "
     echo "Apache setting... "
     echo "Config root: $configFile"
     set_config "$domain" "$configFile" "apache" 
-    sudo service apache2 reload
+    if [[ "$configroot" =~ "apache" || "$configroot" =~ "http" ]];then
+      sudo service apache2 reload
+    fi
   fi 
   
 }
@@ -231,7 +231,7 @@ function set_config(){
         sudo gsed -i s#SERVERNAME#$domain#g $conf_path 
         confLink=`echo $conf_path | gsed 's#\/#\\\/#g'`
         sudo gsed -i "/.*$confLink.*/"d $confF    
-        if [ "confType" = "nginx" ];then
+        if [ "$confType" = "nginx" ];then
           sudo gsed -i "0,/include/s/.*include.*/    include $confLink;\n&/" $confF    
         else
           sudo gsed -i "0,/Include/s/.*Include.*/Include $confLink\n&/" $confF    
@@ -240,7 +240,7 @@ function set_config(){
         sudo sed -i s#SERVERNAME#$domain#g $conf_path
         confLink=`echo $conf_path | sed 's#\/#\\\/#g'`
         sudo sed -i "/.*$confLink.*/"d $confF    
-        if [ "confType" = "nginx" ];then
+        if [ "$confType" = "nginx" ];then
           sudo sed -i "0,/include/s/.*include.*/    include $confLink;\n&/" $confF    
         else
           sudo sed -i "0,/Include/s/.*Include.*/Include $confLink\n&/" $confF    
@@ -253,14 +253,6 @@ function set_config(){
 function config_nginx_apache(){
   domain=$1
   configroot=$2
-  if [[ "$configroot" =~ "nginx" ]];then
-     config_nginx "$domain" "$configroot"
-     return
-  fi
-  if [[ "$configroot" =~ "apache" || "$configroot" =~ "http" ]];then
-     config_apache "$domain" "$configroot"
-     return
-  fi
   config_nginx "$domain" "$configroot"
   config_apache "$domain" "$configroot"
 }
