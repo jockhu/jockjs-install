@@ -3,7 +3,7 @@ commond=$1
 version=$2
 three=$3
 sconfigFile=$4
-pwdPath=`pwd`
+scriptPath=`echo $(cd "$(dirname "$0")"; pwd) | awk -F" " '{print $1}'`
 sys=`uname -a | awk -F " " '{print $1}'`
 
 if [ "$commond" = "-h" ];then
