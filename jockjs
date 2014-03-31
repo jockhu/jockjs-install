@@ -43,7 +43,6 @@ fi
 
 function forever_action(){
   if [ "$1" = "start" -o "$1" = "restart" -o "$1" = "reload" ];then
-    forever_stop $2
     forever_start $2
   fi
   if [ "$1" = "stop" ];then
@@ -57,6 +56,10 @@ function forever_start(){
   else
     sitePath=$1
   fi
+  isRun=`$forever list | grep $jockjsPath/$sitePath/jockjs/service.js`;
+  if [ ! -z "$isRun" ];then
+    forever_stop $1
+  fi      
   $forever start -a -l $jockjsLogPath/js.log $jockjsPath/$sitePath/jockjs/service.js $jockjsConfPath/$sitePath.js
   $forever start -a -l $jockjsLogPath/css.log $jockjsPath/$sitePath/jockcss/service.js $jockjsConfPath/$sitePath.css
 }
