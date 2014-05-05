@@ -31,7 +31,7 @@ else
     jockjsSite=$three
 fi
 forever=/home/www/bin/forever
-jockjsPath=/home/www/release/node
+jockjsPath=/vagrant/node
 jockjsLogPath=/data1/logs/node
 jockjsConfPath=/home/www/config/node
 
