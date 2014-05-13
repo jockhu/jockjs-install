@@ -3,6 +3,7 @@ commond=$1
 version=$2
 three=$3
 sconfigFile=$4
+workspacePath=$5
 scriptPath=`echo $(cd "$(dirname "$0")"; pwd) | awk -F" " '{print $1}'`
 sys=`uname -a | awk -F " " '{print $1}'`
 
@@ -11,9 +12,10 @@ if [ "$commond" = "-h" ];then
     echo ""
     echo "Example..."
     echo ""
-    echo "jockjs install [touch | pad | user | developers | broker] domain ApacheNginxConfig"
+    echo "jockjs install [touch | pad | user | developers | broker] domain ApacheNginxConfig workspacePath"
     echo "  domain (domain eg: jockjs.jockhu.dev.anjuke.com)"
-    echo "  apache or nginx config not required."
+    echo "  apache or nginx config (config eg: /etc/nginx/nginx.conf)"
+    echo "  workspace path (path eg: /home/jock/workspace)"
     echo ""
     echo "jockjs [start | restart | stop] [touch | pad | user | developers | broker]"
     echo ""
@@ -25,20 +27,24 @@ if [ "$commond" = "-h" ];then
     exit;
 fi
 
+if [ -z "$workspacePath" ];then
+    workspacePath=/home/www/releases
+fi
+
 if [ -z "$three" ];then
     jockjsSite=fp00
 else
     jockjsSite=$three
 fi
-forever=/home/www/bin/forever
-jockjsPath=/vagrant/node
-jockjsLogPath=/data1/logs/node
-jockjsConfPath=/home/www/config/node
+forever=/usr/local/bin/forever
+jockjsPath=$workspacePath/node
+jockjsLogPath=$jockjsPath/logs
+jockjsConfPath=$jockjsPath/config
 
 if [ ! -e "$forever" ];then
   forever=/usr/local/bin/forever
 else
-  forever=forever
+  forever=$forever
 fi
 
 function forever_action(){
@@ -119,7 +125,7 @@ function git_install(){
   fi
   
   if [ "$jockjsSite" = "touch" -o "$jockjsSite" = "developers" -o "$jockjsSite" = "pad" -o "$jockjsSite" = "user" -o "$jockjsSite" = "broker" ];then
-    jockjsPath=/home/www/release/node/$jockjsSite
+    jockjsPath=/vagrant/jockjs/$jockjsSite
     if [ ! -e $jockjsPath ];then
       sudo mkdir -p $jockjsPath
     fi
@@ -281,27 +287,27 @@ function nodejs_install(){
     cd /usr/local/lib/node_modules
     sudo git clone https://github.com/mishoo/UglifyJS.git
     echo "UglifyJS install finished."
-    mkdir -p ~/.node_libraries
-    if [ ! -e "~/.node_libraries/uglify-js.js" ];then
-      sudo rm ~/.node_libraries/uglify-js.js
+    mkdir -p /home/vagrant/.node_libraries
+    if [ ! -e "/home/vagrant/.node_libraries/uglify-js.js" ];then
+      sudo rm /home/vagrant/.node_libraries/uglify-js.js
     fi
-    ln -s /usr/local/lib/node_modules/UglifyJS/uglify-js.js ~/.node_libraries
+    ln -s /usr/local/lib/node_modules/UglifyJS/uglify-js.js /home/vagrant/.node_libraries
   fi
 }
 
 function bash_install(){
-  if [ ! -e ~/bin ];then
-    mkdir -p ~/bin
-    echo "Path ~/bin created."
+  if [ ! -e /home/vagrant/bin ];then
+    mkdir -p /home/vagrant/bin
+    echo "Path /home/vagrant/bin created."
   fi
-  if [ ! -e ~/bin/jockjs ];then
-    cp -r $jockjsPath/jockjs-config/jockjs ~/bin/jockjs
+  if [ ! -e /home/vagrant/bin/jockjs ];then
+    cp -r $jockjsPath/jockjs-config/jockjs /home/vagrant/bin/jockjs
     echo "Copy files jockjs ..."
-    sudo echo 'export PATH=~/bin:$PATH' >> ~/.profile
-    source ~/.profile
+    sudo echo 'export PATH=/home/vagrant/bin:$PATH' >> /home/vagrant/.profile
+    source /home/vagrant/.profile
   fi
   if [ ! -z "$three" ];then
-    ~/bin/jockjs domain "$version" "$three" 
+    /home/vagrant/bin/jockjs domain "$version" "$three" 
     echo "Base domian replaced."
   fi
 }
@@ -309,14 +315,14 @@ function bash_install(){
 function clean_install(){
   sudo rm -rf $jockjsConfPath 
   sudo rm -rf $jockjsPath
-  sudo rm -rf ~/bin/jockjs
+  sudo rm -rf /home/vagrant/bin/jockjs
   echo "Jockjs cleand."
 }
 
 if [ "$commond" = "uninstall" ];then
    clean_install
    sudo rm -rf /usr/local/{bin/{node,npm,forever},lib/node_modules/npm,lib/node,share/man/*/node.*}
-   sudo rm -rf ~/.node_libraries
+   sudo rm -rf /home/vagrant/.node_libraries
    echo "Nodejs removed."
    exit 0
 fi
@@ -346,8 +352,8 @@ if [ "$commond" = "install" ];then
      sudo pkill node
      config_nginx_apache "$three" "$sconfigFile"
      sudo rm -rf $jockjsPath/jockjs-config
-     ~/bin/jockjs start $version 
-     ~/bin/jockjs pull $version checkout master
+     /home/vagrant/bin/jockjs start $version 
+     /home/vagrant/bin/jockjs pull $version checkout master
      echo ""
      echo "JockJs install is finished. "
      echo "Your JockJs workspace PATH : $jockjsPath"
