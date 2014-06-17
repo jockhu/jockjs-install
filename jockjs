@@ -32,7 +32,7 @@ else
 fi
 forever=/home/www/bin/forever
 jockjsPath=/home/www/release/node
-jockjsLogPath=/data1/logs/node
+jockjsLogPath=/home/www/logs/node
 jockjsConfPath=/home/www/config/node
 
 if [ ! -e "$forever" ];then
