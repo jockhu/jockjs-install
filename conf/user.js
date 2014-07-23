@@ -65,6 +65,18 @@ exports.componentRoot = '/home/www/release/node/user/jockjs-components';
 exports.componentModules = ['utils','ui','logger'];
 
 /**
+ * Default pages host
+ * @const
+ */
+exports.pageHost = 'http://pages.aifcdn.com/';
+
+/**
+ * Default pages host
+ * @const
+ */
+exports.crossOrigin= '*';
+
+/**
  * Default javascript host
  * @const
  */

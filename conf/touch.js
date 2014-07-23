@@ -65,6 +65,18 @@ exports.componentRoot = '/home/www/release/node/touch/jockjs-components';
 exports.componentModules = ['utils','ui','logger'];
 
 /**
+ * Default pages host
+ * @const
+ */
+exports.pageHost = 'http://pages.aifcdn.com/';
+
+/**
+ * Default cross origin
+ * @const
+ */
+exports.crossOrigin= '*';
+
+/**
  * Default javascript host
  * @const
  */

@@ -5,7 +5,7 @@ three=$3
 sconfigFile=$4
 scriptPath=`echo $(cd "$(dirname "$0")"; pwd) | awk -F" " '{print $1}'`
 sys=`uname -a | awk -F " " '{print $1}'`
-
+echo $scriptPath;exit;
 if [ "$commond" = "-h" ];then
     echo ""
     echo ""
@@ -30,16 +30,10 @@ if [ -z "$three" ];then
 else
     jockjsSite=$three
 fi
-forever=/home/www/bin/forever
+forever=/usr/local/bin/forever
 jockjsPath=/home/www/release/node
 jockjsLogPath=/home/www/logs/node
 jockjsConfPath=/home/www/config/node
-
-if [ ! -e "$forever" ];then
-  forever=/usr/local/bin/forever
-else
-  forever=forever
-fi
 
 function forever_action(){
   if [ "$1" = "start" -o "$1" = "restart" -o "$1" = "reload" ];then
